@@ -10,8 +10,8 @@ Description: Determine date of birth, gender, age on a particular date and valid
 License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true
-BugReports: https://github.com/surgicalinformatics/chiTools/issues
-URL: https://github.com/surgicalinformatics/chiTools
+BugReports: https://github.com/SurgicalInformatics/chiTools/issues
+URL: https://github.com/SurgicalInformatics/chiTools
 Imports:
     dplyr,
     lubridate,
