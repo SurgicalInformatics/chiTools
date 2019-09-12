@@ -1,0 +1,19 @@
+Package: chiTools
+Type: Package
+Title: Tools Extracting Information From the Scottish Community Health Index Number (CHI)
+Version: 0.1.0
+Authors@R: c(
+  person(given = "Ewen", family = "Harrison", role = c("aut", "cre"), email = "ewen.harrison@ed.ac.uk")
+  )
+Maintainer: Ewen Harrison <ewen.harrison@ed.ac.uk>
+Description: Determine date of birth, gender, age on a particular date and validity from the Community Health Index Number (CHI). 
+License: MIT + file LICENCE
+Encoding: UTF-8
+LazyData: true
+BugReports: https://github.com/surgicalinformatics/chiTools/issues
+URL: https://github.com/surgicalinformatics/chiTools
+Imports:
+    dplyr,
+    lubridate,
+    stringr
+RoxygenNote: 6.1.1
