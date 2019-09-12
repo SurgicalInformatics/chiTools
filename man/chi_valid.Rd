@@ -13,7 +13,7 @@ chi_valid(.data)
 A logical vector with \code{FALSE} indicating a non-valid CHI.
 }
 \description{
-Test for valid Community Health Index (CHI) number
+Modulus 11 test on final digit to ensure CHI numnber is valid.
 }
 \examples{
 library(dplyr)

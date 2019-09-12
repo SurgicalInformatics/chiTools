@@ -27,6 +27,7 @@
 #'   )
 chi_dob = function(.data, cutoff_2000 = 20){
   .data %>%
+    clean_chi() %>%
     stringr::str_extract(".{6}") %>%
     lubridate::parse_date_time2("dmy", cutoff_2000 = cutoff_2000) %>%
     lubridate::as_date() # Make Date object, rather than POSIXct
@@ -55,6 +56,7 @@ chi_dob = function(.data, cutoff_2000 = 20){
 #'   )
 chi_gender = function(.data){
   .data %>%
+    clean_chi() %>%
     stringr::str_sub(9, 9) %>%
     as.numeric() %>%
     {ifelse(. %% 2 == 0, "Female", "Male")}
@@ -94,7 +96,9 @@ chi_gender = function(.data){
 #'     age = chi_age(chi, Sys.time())
 #'   )
 chi_age = function(.data, ref_date, cutoff_2000 = 20){
-  dob = chi_dob(.data, cutoff_2000 = cutoff_2000)
+  dob = .data %>%
+    clean_chi() %>%
+    chi_dob(cutoff_2000 = cutoff_2000)
   lubridate::interval(dob, ref_date) %>%
     as.numeric("years") %>%
     floor()
@@ -102,6 +106,8 @@ chi_age = function(.data, ref_date, cutoff_2000 = 20){
 
 
 #' Test for valid Community Health Index (CHI) number
+#'
+#' Modulus 11 test on final digit to ensure CHI numnber is valid.
 #'
 #' @param .data Character. A vector of CHIs as characters/strings.
 #'
@@ -122,6 +128,7 @@ chi_age = function(.data, ref_date, cutoff_2000 = 20){
 #'   )
 chi_valid = function(.data){
   .data %>%
+    clean_chi() %>%
     stringr::str_split("", simplify = TRUE) %>%
     .[, -10] %>%              # Working with matrices hence brackets
     apply(1, as.numeric) %>%  # Convert from string
@@ -132,4 +139,34 @@ chi_valid = function(.data){
       {stringr::str_sub(chi, 10) %>% as.numeric()}
     ) %>%
     as.vector()
+}
+
+
+
+#' Clean CHI
+#'
+#' @param .data
+#'
+#' @keywords internal
+#' @export
+#' @examples
+#' chi = c("1009701234", "1811431232", "1304496368",
+#'   "10 10 19 1234", "   12 12 30 1 2 3 4    ")
+#'   clean_chi(chi)
+#'
+#' # Extra digit will error
+#' chi = "1009701234 3"
+clean_chi = function(.data){
+  if(!is.character(.data)) stop("CHIs must be character string. Try as.character().")
+
+  # Trim all white space
+  out = gsub(" ", "", .data)
+
+  # Length check
+  chi_length = stringr::str_length(out)
+  if(!all(chi_length == 10)){
+    chi_length_not10 = which(chi_length != 10)
+    stop(paste("CHIs in position(s)", paste(chi_length_not10, collapse = ", "), "do not have 10 digits."))
+  }
+  return(out)
 }
