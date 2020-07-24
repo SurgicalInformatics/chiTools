@@ -130,13 +130,13 @@ chi_valid = function(.data){
   .data %>%
     clean_chi() %>%
     stringr::str_split("", simplify = TRUE) %>%
-    .[, -10] %>%              # Working with matrices hence brackets
-    apply(1, as.numeric) %>%  # Convert from string
-    {seq(10, 2) %*% .} %>%    # Multiply and sum step
-    {. %% 11} %>%             # Modulus 11
-    {11 - .} %>%              # Substract from 11
-    dplyr::near(              # Compare result with 10th digit.
-      {stringr::str_sub(chi, 10) %>% as.numeric()}
+    .[, -10, drop=FALSE] %>%   # Working with matrices hence brackets
+    apply(1, as.numeric) %>%   # Convert from string
+    {seq(10, 2) %*% .} %>%     # Multiply and sum step
+    {. %% 11} %>%              # Modulus 11
+    {11 - .} %>%               # Substract from 11
+    dplyr::near(               # Compare result with 10th digit.
+      {stringr::str_sub(.data, 10) %>% as.numeric()}
     ) %>%
     as.vector()
 }
