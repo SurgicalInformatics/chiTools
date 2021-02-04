@@ -131,7 +131,7 @@ chi_valid = function(.data){
     clean_chi() %>%
     stringr::str_split("", simplify = TRUE) %>%
     .[, -10, drop=FALSE] %>%   # Working with matrices hence brackets
-    apply(1, as.numeric) %>%   # Convert from string
+    apply(1, as.numeric) %>%   # Convert from string (and transpose)
     {seq(10, 2) %*% .} %>%     # Multiply and sum step
     {. %% 11} %>%              # Modulus 11
     {11 - .} %>%               # Substract from 11
@@ -164,9 +164,10 @@ clean_chi = function(.data){
 
   # Length check
   chi_length = stringr::str_length(out)
-  if(!all(chi_length == 10)){
+  if(!all(chi_length == 10, na.rm = TRUE)){
     chi_length_not10 = which(chi_length != 10)
     stop(paste("CHIs in position(s)", paste(chi_length_not10, collapse = ", "), "do not have 10 digits."))
   }
   return(out)
 }
+
