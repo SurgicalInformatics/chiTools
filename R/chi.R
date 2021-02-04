@@ -134,7 +134,8 @@ chi_valid = function(.data){
     apply(1, as.numeric) %>%   # Convert from string (and transpose)
     {seq(10, 2) %*% .} %>%     # Multiply and sum step
     {. %% 11} %>%              # Modulus 11
-    {11 - .} %>%               # Substract from 11
+    {11 - .} %>%               # Subtract from 11
+    ifelse(.==11, 0, .) %>%    # If 11 make 0
     dplyr::near(               # Compare result with 10th digit.
       {stringr::str_sub(.data, 10) %>% as.numeric()}
     ) %>%
